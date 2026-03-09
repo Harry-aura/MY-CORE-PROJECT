@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMITLESS // SYSTEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-view">
+        <div class="glass login-box vfx-card">
+            <h1 class="brand" style="margin-bottom: 10px;">LIMITLESS</h1>
+            <p style="color: var(--neon-dim); font-size: 12px; margin-bottom: 30px; letter-spacing: 2px;">SECURE NEURAL LINK</p>
+            
+            <div id="form-login">
+                <div class="form-group">
+                    <input type="text" id="log-user" placeholder="OPERATOR ID / EMAIL">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="log-pass" placeholder="ACCESS CODE">
+                </div>
+                <button onclick="auth('login')">INITIALIZE SESSION</button>
+                <div style="display: flex; justify-content: space-between;">
+                    <button class="btn-link" onclick="toggleAuth('register')">CREATE ACCOUNT</button>
+                    <button class="btn-link" onclick="alert('Biometric recovery link sent to registered terminal.')">FORGOT PASSWORD?</button>
+                </div>
+            </div>
+
+            <div id="form-register" style="display: none;">
+                <div class="form-group"><input type="text" id="reg-name" placeholder="FULL NAME"></div>
+                <div class="form-group"><input type="number" id="reg-age" placeholder="AGE"></div>
+                <div class="form-group"><input type="password" id="reg-pass" placeholder="SET ACCESS CODE"></div>
+                <button onclick="auth('register')">REGISTER PROFILE</button>
+                <button class="btn-link" onclick="toggleAuth('login')" style="width: 100%">BACK TO LOGIN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-view">
+        <aside class="glass">
+            <div class="brand">LIMITLESS</div>
+            <div class="nav-item active" onclick="nav('dashboard', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> OVERVIEW
+            </div>
+            <div class="nav-item" onclick="nav('configuration', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h2v5zm0 4h-2v-2h2v2z"/></svg> ASSIGN BLOCK
+            </div>
+            <div class="nav-item" onclick="nav('analytics', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> ANALYTICS
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <div class="nav-item" onclick="toggleTheme()">
+                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg> TOGGLE UI MODE
+            </div>
+            <div class="nav-item" onclick="logout()" style="color: var(--alert)">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> DISCONNECT
+            </div>
+        </aside>
+
+        <main>
+            <div class="topbar">
+                <div style="font-size: 20px; font-weight: bold;">WELCOME, <span id="ui-username" style="color: var(--neon)">USER</span></div>
+                <div class="status-pulse"><div class="dot"></div> ENGINE MONITORING ACTIVE</div>
+            </div>
+
+            <section id="view-dashboard" class="view-section active">
+                <div class="grid-cards">
+                    <div class="glass stat-card vfx-card">
+                        <label>ACTIVE BLOCKS</label>
+                        <div class="stat-val" id="stat-active">0</div>
+                        <div style="font-size: 12px; color: var(--neon-dim);">Protocols currently enforced</div>
+                    </div>
+                    <div class="stat-card glass vfx-card">
+                        <label>TOTAL ATTEMPTS BLOCKED</label>
+                        <div class="stat-val" id="stat-attempts">0</div>
+                        <div style="font-size: 12px; color: var(--neon-dim);">Violations prevented</div>
+                    </div>
+                    <div class="stat-card glass vfx-card">
+                        <label>TIME SAVED (EST)</label>
+                        <div class="stat-val" id="stat-time">0H</div>
+                        <div style="font-size: 12px; color: var(--neon-dim);">Based on statistical variation</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="glass stat-card vfx-card" style="height: 400px; overflow-y: auto;">
+                        <div class="panel-title">CURRENT RESTRICTIONS</div>
+                        <ul class="data-list" id="active-blocks-list"></ul>
+                    </div>
+                    <div class="glass stat-card vfx-card" style="height: 400px; overflow-y: auto;">
+                        <div class="panel-title">RECENT ACTIVITIES</div>
+                        <ul class="data-list" id="activity-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-configuration" class="view-section">
+                <div class="glass stat-card vfx-card" style="max-width: 600px; margin: 0 auto;">
+                    <div class="panel-title">ASSIGN NEW BLOCK PROTOCOL <span style="font-size: 11px; color: var(--alert)">*3-HOUR UNBREAKABLE LOCK APPLIES</span></div>
+                    
+                    <div class="form-group">
+                        <label>TARGET APPLICATION</label>
+                        <select id="cfg-app">
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Snapchat">Snapchat</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="FreeFire">FreeFire</option>
+                            <option value="PUBG">PUBG</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>PROFILE/TARGET URL</label>
+                        <input type="text" id="cfg-url" placeholder="e.g., instagram.com/reels">
+                    </div>
+                    <div class="form-group">
+                        <label>PRIMARY GOAL (WHY BLOCK THIS?)</label>
+                        <input type="text" id="cfg-goal" placeholder="e.g., Focus on placement prep">
+                    </div>
+                    <div class="form-group">
+                        <label>BLOCK DURATION (HOURS)</label>
+                        <input type="number" id="cfg-duration" min="1" max="24" value="3">
+                    </div>
+                    
+                    <button onclick="assignBlock()" style="background: rgba(0,243,255,0.1)">INITIALIZE LOCKDOWN</button>
+                </div>
+            </section>
+
+            <section id="view-analytics" class="view-section">
+                <div class="glass stat-card vfx-card">
+                    <div class="panel-title">STATISTICAL VARIATIONS</div>
+                    <div style="height: 300px; display: flex; align-items: flex-end; gap: 10px; margin-top: 20px; border-bottom: 1px solid var(--border);">
+                        <div style="flex: 1; height: 30%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                        <div style="flex: 1; height: 70%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                        <div style="flex: 1; height: 45%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                        <div style="flex: 1; height: 90%; background: linear-gradient(to top, var(--alert), transparent); border: 1px solid var(--alert);"></div>
+                        <div style="flex: 1; height: 60%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                        <div style="flex: 1; height: 20%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                        <div style="flex: 1; height: 85%; background: linear-gradient(to top, var(--neon-dim), transparent); border: 1px solid var(--neon);"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: var(--neon-dim);">
+                        <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
